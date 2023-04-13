@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/ProfilePage.qml</file>
+        <file>qml/SettingsPage.qml</file>
+        <file>qml/TaskDialog.qml</file>
+        <file>qml/TasksPage.qml</file>
+        <file>icons/close.svg</file>
+        <file>icons/close25.png</file>
+        <file>icons/close225.png</file>
+        <file>icons/exit.svg</file>
+        <file>icons/icons8_applicant.svg</file>
+        <file>icons/icons8_choice.svg</file>
+        <file>icons/icons8_save.svg</file>
+        <file>icons/icons8_system_task.svg</file>
+        <file>icons/main44.png</file>
+        <file>icons/main150.png</file>
+        <file>icons/menu.png</file>
+        <file>icons/play.svg</file>
+        <file>icons/profile.svg</file>
+        <file>icons/profile25.png</file>
+        <file>icons/save.svg</file>
+        <file>icons/settings.svg</file>
+        <file>icons/settings25.png</file>
+        <file>icons/task.png</file>
+        <file>icons/taskIcon.svg</file>
+        <file>icons/tasks.svg</file>
+        <file>icons/test25.png</file>
+        <file>qml/PropertyDelegate.qml</file>
+        <file>qml/MenuButton.qml</file>
+    </qresource>
+</RCC>
