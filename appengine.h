@@ -5,7 +5,6 @@
 #include <QQuickView>
 #include <QQmlPropertyMap>
 #include "taskmanager.h"
-#include "properties.h"
 #include "player.h"
 
 class AppEngine : public QObject
@@ -17,6 +16,8 @@ public:
     bool checkPermission();
     void setFullScreenMode();
     Q_INVOKABLE void startSelectedTask(int idx);
+    Q_INVOKABLE void startPreviewTask(int idx);
+
 
 signals:
 

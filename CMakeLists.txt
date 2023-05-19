@@ -9,6 +9,25 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_compile_definitions(USE_LSL_LIB)
+
+include(FetchContent)
+
+FetchContent_Declare(LSL
+            GIT_REPOSITORY https://github.com/sccn/liblsl.git
+            FIND_PACKAGE_ARGS
+    )
+set(LSL_BUILD_STATIC ON)
+set(LSL_OPTIMIZATIONS OFF)
+FetchContent_MakeAvailable(LSL)
+
+FetchContent_Declare(SimpleMail2Qt6
+            GIT_REPOSITORY https://github.com/cutelyst/simple-mail.git
+            FIND_PACKAGE_ARGS
+    )
+set(BUILD_DEMOS OFF)
+FetchContent_MakeAvailable(SimpleMail2Qt6)
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets QuickWidgets QuickControls2)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets QuickWidgets QuickControls2)
 
@@ -31,6 +50,10 @@ set(PROJECT_SOURCES
         lsl.cpp
         player.cpp
         player.h
+        historylistmodel.h
+        historylistmodel.cpp
+        mailagent.h
+        mailagent.cpp
         resources.qrc
         items/polygonitem.h
         items/polygonitem.cpp
@@ -40,6 +63,10 @@ set(PROJECT_SOURCES
         items/spiralitem.cpp
         items/buttonitem.h
         items/buttonitem.cpp
+        items/mfiitem.h
+        items/mfiitem.cpp
+        items/nasaitem.h
+        items/nasaitem.cpp
         tasks/test1task.h
         tasks/test1task.cpp
         tasks/backgroundactivitytask.h
@@ -72,7 +99,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(NeuroStim PRIVATE Qt6::CorePrivate Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::QuickControls2)
+target_link_libraries(NeuroStim PRIVATE Qt6::CorePrivate Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::QuickControls2 SimpleMail2Qt6::Core lsl)
 include_directories("items" "tasks")
 
 set_target_properties(NeuroStim PROPERTIES
@@ -83,6 +110,10 @@ set_target_properties(NeuroStim PROPERTIES
     MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
     WIN32_EXECUTABLE TRUE
 )
+
+if(ANDROID)
+    include(C:/Users/vanti/AppData/Local/Android/Sdk/android_openssl/CMakeLists.txt)
+endif()
 
 install(TARGETS NeuroStim
     BUNDLE DESTINATION .

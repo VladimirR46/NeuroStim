@@ -2,7 +2,7 @@
 #define SPIRAL_H
 
 #include <../item.h>
-
+#include <QTimer>
 
 class SpiralGraphicItem;
 class SpiralItem : public Item
@@ -12,7 +12,7 @@ public:
     explicit SpiralItem(QObject* parent);
     ~SpiralItem();
 
-    void Init(int type, float spins, float ext_r, float int_r);
+    void Init(int type, float spins, float ext_r, float int_r, int time_limit);
     void setDrawProgress(bool value);
     QGraphicsItem* graphicsItem() override;
 
@@ -46,8 +46,9 @@ struct PolarPoint {
     float ro;
 };
 
-class SpiralGraphicItem : public QGraphicsItem
+class SpiralGraphicItem : public QGraphicsObject
 {
+    Q_OBJECT
 public:
     explicit SpiralGraphicItem(SpiralItem *parent);
     ~SpiralGraphicItem();
@@ -59,6 +60,9 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+
+private slots:
+    void TimeOut();
 
 private:
     QPointF spiralEquation(float dir, float step, QPointF center, float radius);
@@ -72,9 +76,12 @@ private:
     bool CircleContain(QPointF point, QPointF &circle_point, float radius);
     float distance(QPointF point1, QPointF point2);
 
+    QTimer *m_timer;
     QImage image;
     int sPenWidth = 14;
     QColor sPenColor = 0x87ceeb;//Qt::blue;
+    QColor BeginPointColor;
+    QColor EndPointColor;
     QPointF lastPoint;
     bool scribbling = false;
     Spiral spiral;

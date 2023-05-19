@@ -42,7 +42,7 @@ Rectangle {
         id: _editDelegate
 
         TextField {
-            width: 50
+            width: 60
             height: 30
             text: model.value
             onEditingFinished: {
@@ -102,7 +102,7 @@ Rectangle {
 
         Rectangle {
             height: 20
-            width: 40
+            width: 50
             color: model.value
             border.color: "black"
             radius: 20

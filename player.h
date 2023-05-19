@@ -16,7 +16,7 @@ public:
     explicit Player();
     ~Player();
 
-    void start(BaseTask *task);
+    void start(BaseTask *task, bool preview);
     void Stop();
     void playSample(Sample* sample);
     int sampleNumber();
@@ -34,6 +34,7 @@ signals:
 
 private:
     void Loop();
+    bool m_is_preview = false;
 
     QGraphicsScene *m_scene;
     QTimer* m_timer;

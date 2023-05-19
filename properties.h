@@ -48,6 +48,7 @@ public:
 
     // get
     QVariant &operator[](const QString name) { return m_list[name].value; }
+    void setPropertyValue(QString name, QVariant value);
     Property& getProperty(QString name);
     Property *at(int order);
     int getInt(QString name);

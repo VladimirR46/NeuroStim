@@ -42,6 +42,8 @@ public:
     void addItem(Item* item);
     LSL* lsl();
     void setLslSending(bool value);
+    void skipInPreview(bool skip);
+    bool isSkip();
 
     template <typename T>
     T* CreateItem() {
@@ -67,6 +69,7 @@ private:
     Properties m_properties;
     LSL *m_lsl;
     bool m_lsl_sending = true;
+    bool m_skip = false;
 };
 
 #endif // SAMPLE_H

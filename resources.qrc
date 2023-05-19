@@ -28,5 +28,11 @@
         <file>icons/test25.png</file>
         <file>qml/PropertyDelegate.qml</file>
         <file>qml/MenuButton.qml</file>
+        <file>icons/preview.svg</file>
+        <file>qml/HistoryPage.qml</file>
+        <file>icons/delete_trash.svg</file>
+        <file>icons/send.svg</file>
+        <file>qml/SendDialog.qml</file>
+        <file>icons/history.svg</file>
     </qresource>
 </RCC>

@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 
     QObject::connect(view.engine(), &QQmlEngine::quit, &a, &QApplication::quit );
 
-    view.setMinimumSize(QSize(500,500));
+    view.setMinimumSize(QSize(550,550));
     view.show();
     return a.exec();
 }

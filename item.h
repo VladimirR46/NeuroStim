@@ -14,7 +14,7 @@ class Item : public QObject
     Q_OBJECT
 public:
     explicit Item(QObject* parent, QString name);
-    virtual ~Item(){qDebug()<<"~Item "+m_name;}
+    virtual ~Item(){}
 
     void start();
     virtual QGraphicsItem* graphicsItem();

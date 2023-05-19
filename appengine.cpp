@@ -1,5 +1,7 @@
 #include "appengine.h"
 #include <QQmlContext>
+#include "historylistmodel.h"
+#include "mailagent.h"
 
 #ifdef Q_OS_ANDROID
 #include <QtCore/private/qandroidextras_p.h>
@@ -12,7 +14,9 @@ AppEngine::AppEngine(QQuickView *view, QObject *parent)
 {
     setFullScreenMode(); // For Android
 
+    qmlRegisterType<HistoryListModel>("History", 1, 0, "HistoryListModel");
     qmlRegisterType<TaskListModel>("Tasks", 1, 0, "TaskListModel");
+    qmlRegisterType<MailAgent>("Mail", 1, 0, "MailAgent");
     qmlRegisterUncreatableType<TaskManager>("Tasks", 1, 0, "TaskManager",QStringLiteral("Create in QML"));
     view->rootContext()->setContextProperty("taskManager", &m_manager);
 
@@ -71,7 +75,15 @@ void AppEngine::startSelectedTask(int idx)
 
         task->setSubject(subject);
         task->saveProperties();
-        m_player.start(task);
+        m_player.start(task, false);
+    }
+}
+
+void AppEngine::startPreviewTask(int idx)
+{
+    BaseTask* task = m_manager.getTask(idx);
+    if(task) {
+        m_player.start(task, true);
     }
 }
 

@@ -23,7 +23,6 @@ QGraphicsItem *TextItem::graphicsItem()
 {
     TextGraphicItem *text = new TextGraphicItem(this);
     text->setPos(m_properties.get<QPointF>("pos"));
-    text->setFlags(QGraphicsItem::ItemIsMovable);
     return text;
 }
 

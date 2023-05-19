@@ -8,7 +8,6 @@ Sample::Sample()
 
 Sample::~Sample()
 {
-    qDebug()<<"~Sample";
     item_list.clear();
 }
 
@@ -82,6 +81,16 @@ LSL *Sample::lsl()
 void Sample::setLslSending(bool value)
 {
     m_lsl_sending = value;
+}
+
+void Sample::skipInPreview(bool skip)
+{
+    m_skip = skip;
+}
+
+bool Sample::isSkip()
+{
+    return m_skip;
 }
 
 void Sample::addItem(Item* item)

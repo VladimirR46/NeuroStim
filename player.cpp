@@ -31,12 +31,14 @@ Player::~Player()
     m_lsl.close();
 }
 
-void Player::start(BaseTask* task)
+void Player::start(BaseTask* task, bool preview)
 {
     if(!task) return;
+    m_is_preview = preview;
 
     switch (QOperatingSystemVersion::currentType()) {
     case QOperatingSystemVersion::Windows:
+        //show();
         showFullScreen();
         break;
     case QOperatingSystemVersion::Android:
@@ -62,7 +64,7 @@ void Player::Stop()
     m_timer->stop();
     m_lsl.stop();
     m_scene->clear();
-    saveTask();
+    if(!m_is_preview) saveTask();
     m_task->close();
 
     if(QOperatingSystemVersion::currentType() == QOperatingSystemVersion::Android)
@@ -72,7 +74,12 @@ void Player::Stop()
 }
 
 void Player::playSample(Sample *sample)
-{  
+{
+    if(m_is_preview && sample->isSkip()) {
+        NextSample();
+        return;
+    }
+
     m_scene->setBackgroundBrush(sample->backgroundСolor());
 
     for(int idx = 0; idx < sample->itemCount(); idx++)

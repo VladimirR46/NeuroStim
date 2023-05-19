@@ -100,6 +100,17 @@ Page {
                     drawer.close()
                 }
             }
+            MenuButton {
+                Layout.fillWidth: true
+                height: 40
+                text: "История"
+                source: "qrc:/icons/history.svg"
+                onClicked: {
+                    _stackView.pop()
+                    _stackView.push("qrc:/qml/HistoryPage.qml")
+                    drawer.close()
+                }
+            }
             Item{
                 Layout.fillHeight: true
             }

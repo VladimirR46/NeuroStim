@@ -18,6 +18,11 @@ void Properties::add(QString name, Property p){
     m_list[name] = p;
 }
 
+void Properties::setPropertyValue(QString name, QVariant value)
+{
+    m_list[name].value = value;
+}
+
 Property &Properties::getProperty(QString name) {
     return m_list[name];
 }

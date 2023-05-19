@@ -71,24 +71,27 @@ Dialog {
             spacing: 8
             //anchors.horizontalCenter: parent.horizontalCenter
             Layout.fillWidth: true
-            /*
+
             Button{
-                id: _saveButton
-                text: "Сохранить"
+                id: _previewButton
+                text: "Просмотр"
                 icon.color: "transparent"
-                icon.source: "qrc:/icons/save.svg"
-                icon.height: 32
-                icon.width: 32
+                icon.source: "qrc:/icons/preview.svg"
+                icon.height: 30
+                icon.width: 30
                 background: Rectangle{
-                    color: _saveButton.down ? "skyblue" : (_saveButton.hovered ? "#f0f0f0" : "white")
+                    color: _previewButton.down ? "skyblue" : (_previewButton.hovered ? "#f0f0f0" : "white")
                     radius: 10
+                    border.color: "powderblue"
+                    border.width: 1
                 }
 
                 onClicked: {
-                    console.log("Index ", _tasksListView.currentIndex);
+                    appEngine.startPreviewTask(_tasksListView.currentIndex)
+                    root.close()
                 }
             }
-            */
+
             Button{
                 id: _startButton
                 text: "Запустить"
@@ -99,6 +102,8 @@ Dialog {
                 background: Rectangle{
                     color: _startButton.down ? "skyblue" : (_startButton.hovered ? "#f0f0f0" : "white")
                     radius: 10
+                    border.color: "powderblue"
+                    border.width: 1
                 }
                 onClicked: {
                     appEngine.startSelectedTask(_tasksListView.currentIndex)

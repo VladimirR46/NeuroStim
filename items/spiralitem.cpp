@@ -7,22 +7,27 @@ SpiralItem::SpiralItem(QObject *parent)
     m_properties.add(Property("InternRadius", 1.5 ,"Внутренний радиус",UIType::Edit));
     m_properties.add(Property("ExternRadius", 7.5 ,"Внешний радиус спирали",UIType::Edit));
     m_properties.add(Property("Spins", 3.0 ,"Количество витков",UIType::Edit));
-    m_properties.add(Property("point_radius", 10 ,"Радиус кругов",UIType::Edit));
+    m_properties.add(Property("point_radius", 13 ,"Радиус кругов",UIType::Edit));
     m_properties.add(Property("type", 1 ,"Тип спирали",UIType::Edit));
     m_properties.add(Property("DrawProgress", false ,"Рисовать ошибку и заполнение", UIType::CheckBox));
+    m_properties.add(Property("LineWidth", 14 ,"Толщина линии", UIType::Edit));
+    m_properties.add(Property("TimeLimit", 0 ,"Ограничение по времени", UIType::CheckBox));
+    m_properties.add(Property("TimeLimitValue", 10000 ,"Ограничение по времени",UIType::Edit));
+    m_properties.add(Property("BeginPointColor", QColor(0x90ee90) ,"Цвет точки начала",UIType::ColorDialog));
+    m_properties.add(Property("EndPointColor", QColor(0xff7f50) ,"Цвет точки конца",UIType::ColorDialog));
 }
 
 SpiralItem::~SpiralItem()
 {
-    qDebug()<<"~SpiralItem";
 }
 
-void SpiralItem::Init(int type, float spins, float ext_r, float int_r)
+void SpiralItem::Init(int type, float spins, float ext_r, float int_r, int time_limit)
 {
     m_properties["ExternRadius"] = ext_r;
     m_properties["InternRadius"] = int_r;
     m_properties["Spins"] = spins;
     m_properties["type"] = type;
+    m_properties["TimeLimit"] = time_limit;
 
     m_properties["size"] = QSizeF(ext_r*2+50,ext_r*2+50);
 }
@@ -52,6 +57,9 @@ SpiralGraphicItem::SpiralGraphicItem(SpiralItem *parent) : m_parent(parent)
     spiral.type = m_properties->getInt("type");
     ext_radius = m_properties->getFloat("ExternRadius");
     point_radius = m_properties->getFloat("point_radius");
+    sPenWidth = m_properties->getInt("LineWidth");
+    BeginPointColor = m_properties->getColor("BeginPointColor");
+    EndPointColor = m_properties->getColor("EndPointColor");
 
     if(spiral.type==1){ spiral.direction = -1; spiral.trace_type = 1;}
     if(spiral.type==2){ spiral.direction = 1; spiral.trace_type = 1;}
@@ -87,11 +95,14 @@ SpiralGraphicItem::SpiralGraphicItem(SpiralItem *parent) : m_parent(parent)
     newImage.fill(qRgb(255, 255, 255));
     image = newImage;
     is_run = true;
+
+    m_timer = new QTimer(this);
+    m_timer->setSingleShot(true);
+    connect(m_timer, &QTimer::timeout, this, &SpiralGraphicItem::TimeOut);
 }
 
 SpiralGraphicItem::~SpiralGraphicItem()
 {
-    qDebug()<<"~SpiralGraphicItem";
 }
 
 QRectF SpiralGraphicItem::boundingRect() const
@@ -104,8 +115,8 @@ void SpiralGraphicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
     painter->drawImage(boundingRect().x(),boundingRect().y(),image);
     painter->setRenderHint(QPainter::Antialiasing);
     drawSpiral(spiral, painter);
-    drawCircle(spiral.begin, QColor(0x90ee90) ,point_radius, painter);
-    drawCircle(spiral.end,QColor(0xff7f50),point_radius, painter);
+    drawCircle(spiral.begin, BeginPointColor ,point_radius, painter);
+    drawCircle(spiral.end,EndPointColor,point_radius, painter);
 
     if(isDrawProgress)
         painter->drawLine(lastProgressPoint, lastPoint);
@@ -116,6 +127,8 @@ void SpiralGraphicItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (is_run && event->button() == Qt::LeftButton && CircleContain(event->pos(), TargetPoint, point_radius)) {
         lastPoint = event->pos();
         scribbling = true;
+
+        if(m_properties->getBool("TimeLimit")) m_timer->start(m_properties->getInt("TimeLimitValue"));
 
         Event lsl_event(m_parent->m_name, m_parent->m_id, "mousePress");
         lsl_event.data["x"] = lastPoint.x();
@@ -130,7 +143,9 @@ void SpiralGraphicItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         drawLineTo(event->pos());
 
         if(CircleContain(event->pos(), spiral.end, point_radius))
-        { 
+        {
+            if(m_timer->isActive()) m_timer->stop();
+
             is_run = false;
             scribbling = false;
 
@@ -140,9 +155,6 @@ void SpiralGraphicItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             Item* item = m_parent->findItem("Button");
             if(item)
                 static_cast<ButtonItem*>(item)->setVisible(true);
-
-            //m_parent->sendSwitchEvent();
-
             return;
         }
 
@@ -173,6 +185,19 @@ void SpiralGraphicItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         lsl_event.data["y"] = event->pos().y();
         m_parent->m_lsl->sendEvent(lsl_event);
     }
+}
+
+void SpiralGraphicItem::TimeOut()
+{
+    is_run = false;
+    scribbling = false;
+
+    Event lsl_event(m_parent->m_name, m_parent->m_id, "timeout");
+    m_parent->m_lsl->sendEvent(lsl_event);
+
+    Item* item = m_parent->findItem("Button");
+    if(item)
+        static_cast<ButtonItem*>(item)->setVisible(true);
 }
 
 QPointF SpiralGraphicItem::spiralEquation(float dir, float step, QPointF center, float radius)

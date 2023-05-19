@@ -9,6 +9,6 @@ Page {
 
     background: Rectangle {
         id: _backgroundRect
-        color: "lightgreen"
+        color: "#f0f0f0"
     }
 }

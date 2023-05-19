@@ -17,7 +17,6 @@ BaseTask::BaseTask(QString name) : m_name(name)
 
 BaseTask::~BaseTask()
 {
-    qDebug()<<"~BaseTask";
 }
 
 bool BaseTask::start(QSize screen)
