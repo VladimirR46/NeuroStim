@@ -39,6 +39,7 @@ struct Spiral
     QPointF center;
     QPointF begin;
     QPointF end;
+    QList<QPointF> points;
 };
 
 struct PolarPoint {
@@ -69,6 +70,7 @@ private:
     void drawSpiral(Spiral &spiral, QPainter *painter);
     void drawLineTo(const QPointF &endPoint);
     void drawCircle(QPointF point, QColor color, int radius, QPainter *painter);
+    void drawTriangle(QPointF point, QColor color, QPainter *painter);
     void drawProgress(float angle);
     PolarPoint calcAngle(QPointF point);
     PolarPoint car2pol(QPointF point);

@@ -15,6 +15,13 @@ bool LSL::open()
 #ifdef USE_LSL_LIB
     lsl::stream_info info("NauroStim-Events", "Events", 1, lsl::IRREGULAR_RATE, lsl::cf_int32, "7643562-7455141");
 
+    /* Facility*/
+    lsl::xml_element facility = info.desc().append_child("facility");
+    facility.append_child_value("lab", "Nurolab and Robotics")
+        .append_child_value("department", "Neurology");
+
+    //lsl::xml_element subject = info.desc().append_child("subject");
+
     /* Run Outlet */
     m_outlet.reset(new lsl::stream_outlet(info));
 #endif

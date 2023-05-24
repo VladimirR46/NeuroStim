@@ -11,7 +11,7 @@ Test1Task::Test1Task() : BaseTask("Моторные реакции")
 
     if(!loadProperties())
     {
-        m_properties.add(Property("TrialCount","4","Количество триалов",UIType::Edit));
+        m_properties.add(Property("TrialCount","3","Количество триалов",UIType::Edit));
         m_properties.add(Property("MonitorDiagonal", 11,"Диагональ монитора",UIType::Edit));
         m_properties.add(Property("InternRadius", 1.5 ,"Внутренний радиус",UIType::Edit));
         m_properties.add(Property("ExternRadius", 7 ,"Внешний радиус спирали",UIType::Edit));
@@ -22,7 +22,7 @@ Test1Task::Test1Task() : BaseTask("Моторные реакции")
         m_properties.add(Property("Fone1", 100 ,"Первый фон",UIType::Edit));
         m_properties.add(Property("Rest", 2000 ,"Отдых",UIType::Edit));
         m_properties.add(Property("isDebugDraw", false ,"Рисовать отладочную информацию",UIType::CheckBox));
-        m_properties.add(Property("isTimeLimit", true ,"Ограничение по времени",UIType::CheckBox));
+        m_properties.add(Property("isTimeLimit", false ,"Ограничение по времени",UIType::CheckBox));
         m_properties.add(Property("isNonLimit", true ,"Без ограничений",UIType::CheckBox));
         m_properties.add(Property("TimeLimitValue", 7000 ,"Время ограничения",UIType::Edit));
         m_properties.add(Property("isNASA", true ,"Тест NASA",UIType::CheckBox));

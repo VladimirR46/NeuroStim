@@ -115,7 +115,8 @@ void SpiralGraphicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
     painter->drawImage(boundingRect().x(),boundingRect().y(),image);
     painter->setRenderHint(QPainter::Antialiasing);
     drawSpiral(spiral, painter);
-    drawCircle(spiral.begin, BeginPointColor ,point_radius, painter);
+    drawTriangle(spiral.begin, BeginPointColor, painter);
+    //drawCircle(spiral.begin, BeginPointColor ,point_radius, painter);
     drawCircle(spiral.end,EndPointColor,point_radius, painter);
 
     if(isDrawProgress)
@@ -211,11 +212,13 @@ QPointF SpiralGraphicItem::spiralEquation(float dir, float step, QPointF center,
 void SpiralGraphicItem::drawSpiral(Spiral &spiral, QPainter *painter)
 {
     QPointF point1 = spiralEquation(spiral.direction,spiral.int_angle,spiral.center,spiral.k);
+    spiral.points.append(point1);
     for(float step = spiral.int_angle+spiral.step; step <= spiral.ext_angle; step+=spiral.step)
     {
         QPointF point2 = spiralEquation(spiral.direction,step,spiral.center,spiral.k);
         painter->setPen(QPen(Qt::black, 2, Qt::SolidLine));
         painter->drawLine(point1, point2);
+        spiral.points.append(point2);
         point1 = point2;
     }
 }
@@ -239,9 +242,31 @@ void SpiralGraphicItem::drawLineTo(const QPointF &endPoint)
 
 void SpiralGraphicItem::drawCircle(QPointF point, QColor color, int radius, QPainter *painter)
 {
-    painter->setPen(QPen(Qt::black, 2, Qt::DashLine));
+    painter->setPen(QPen(Qt::black, 2, Qt::SolidLine));
     painter->setBrush(QBrush(color, Qt::SolidPattern));
     painter->drawEllipse(QRect(point.x()-radius,point.y()-radius,radius*2,radius*2));
+}
+
+void SpiralGraphicItem::drawTriangle(QPointF point, QColor color, QPainter *painter)
+{
+    painter->setPen(QPen(Qt::black, 2, Qt::SolidLine));
+    painter->setBrush(QBrush(color, Qt::SolidPattern));
+
+    float h = 30;
+    float a = 25;
+
+    float angle = 45;
+    if(spiral.type==1) angle = 115;
+    if(spiral.type==2) angle = 65;
+    if(spiral.type==3) angle = -90;
+    if(spiral.type==4) angle = -85;
+
+    QPolygonF polygon;
+    polygon << QPointF(point.x()-a/2,point.y()+h/2) << QPointF(point.x(),point.y()-h/2) << QPointF(point.x()+a/2,point.y()+h/2);
+
+    QTransform transform;
+    polygon = transform.translate(point.x(), point.y()).rotate(angle).translate(-point.x(), -point.y()).map(polygon);
+    painter->drawPolygon(polygon);
 }
 
 void SpiralGraphicItem::drawProgress(float angle)
