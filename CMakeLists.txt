@@ -52,6 +52,8 @@ set(PROJECT_SOURCES
         player.h
         historylistmodel.h
         historylistmodel.cpp
+        screenlistmodel.h
+        screenlistmodel.cpp
         mailagent.h
         mailagent.cpp
         resources.qrc

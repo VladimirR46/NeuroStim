@@ -2,6 +2,7 @@
 #include <QQmlContext>
 #include "historylistmodel.h"
 #include "mailagent.h"
+#include <QApplication>
 
 #ifdef Q_OS_ANDROID
 #include <QtCore/private/qandroidextras_p.h>
@@ -19,6 +20,7 @@ AppEngine::AppEngine(QQuickView *view, QObject *parent)
     qmlRegisterType<MailAgent>("Mail", 1, 0, "MailAgent");
     qmlRegisterUncreatableType<TaskManager>("Tasks", 1, 0, "TaskManager",QStringLiteral("Create in QML"));
     view->rootContext()->setContextProperty("taskManager", &m_manager);
+    view->rootContext()->setContextProperty("screenList", &m_screens);
 
     qmlRegisterType<PropertyListModel>("Properties", 1, 0, "PropertyListModel");
 
@@ -57,7 +59,7 @@ void AppEngine::setFullScreenMode()
             .callObjectMethod("getDecorView", "()Landroid/view/View;")
             .callMethod<void>("setSystemUiVisibility", "(I)V", 0xffffffff);
     }).waitForFinished();
-    #endif
+#endif
 }
 
 void AppEngine::startSelectedTask(int idx)
@@ -75,7 +77,7 @@ void AppEngine::startSelectedTask(int idx)
 
         task->setSubject(subject);
         task->saveProperties();
-        m_player.start(task, false);
+        m_player.start(task, false, m_screens.currentScreen());
     }
 }
 
@@ -83,7 +85,7 @@ void AppEngine::startPreviewTask(int idx)
 {
     BaseTask* task = m_manager.getTask(idx);
     if(task) {
-        m_player.start(task, true);
+        m_player.start(task, true, m_screens.currentScreen());
     }
 }
 

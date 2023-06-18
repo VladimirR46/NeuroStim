@@ -31,7 +31,7 @@ Player::~Player()
     m_lsl.close();
 }
 
-void Player::start(BaseTask* task, bool preview)
+void Player::start(BaseTask* task, bool preview, QScreen *screen)
 {
     if(!task) return;
     m_is_preview = preview;
@@ -39,6 +39,7 @@ void Player::start(BaseTask* task, bool preview)
     switch (QOperatingSystemVersion::currentType()) {
     case QOperatingSystemVersion::Windows:
         //show();
+        setGeometry(screen->geometry());
         showFullScreen();
         break;
     case QOperatingSystemVersion::Android:

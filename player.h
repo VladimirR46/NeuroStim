@@ -16,7 +16,7 @@ public:
     explicit Player();
     ~Player();
 
-    void start(BaseTask *task, bool preview);
+    void start(BaseTask *task, bool preview, QScreen *screen);
     void Stop();
     void playSample(Sample* sample);
     int sampleNumber();
